@@ -40,7 +40,7 @@ func NewConfigurations(logger hclog.Logger) *Configurations {
 
 	viper.SetDefault("SERVER_ADDRESS", "0.0.0.0:9090")
 	viper.SetDefault("DB_HOST", "localhost")
-	viper.SetDefault("DB_NAME", "ers")
+	viper.SetDefault("DB_NAME", "ElectionMonitoring")
 	viper.SetDefault("DB_USER", "postgres")
 	viper.SetDefault("DB_PASSWORD", "pa$$word123")
 	viper.SetDefault("DB_PORT", "5432")

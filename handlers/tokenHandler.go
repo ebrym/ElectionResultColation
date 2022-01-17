@@ -1,4 +1,4 @@
-package middleware
+package handlers
 
 import (
 	"context"
@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/ebrym/ers/data"
-	"github.com/ebrym/ers/handlers"
 	"github.com/ebrym/ers/response"
 	"github.com/ebrym/ers/utils"
 )
@@ -41,7 +40,7 @@ func (ah *AuthenticationHandler) MiddlewareValidateUser(next http.Handler) http.
 		}
 
 		// add the user to the context
-		ctx := context.WithValue(r.Context(), handlers.UserKey{}, *user)
+		ctx := context.WithValue(r.Context(), UserKey{}, *user)
 		r = r.WithContext(ctx)
 
 		// call the next handler
@@ -78,7 +77,7 @@ func (ah *AuthenticationHandler) MiddlewareValidateAccessToken(next http.Handler
 		}
 		ah.logger.Debug("access token validated")
 
-		ctx := context.WithValue(r.Context(), handlers.UserIDKey{}, userID)
+		ctx := context.WithValue(r.Context(), UserIDKey{}, userID)
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)
@@ -129,7 +128,7 @@ func (ah *AuthenticationHandler) MiddlewareValidateRefreshToken(next http.Handle
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), handlers.UserKey{}, *user)
+		ctx := context.WithValue(r.Context(), UserKey{}, *user)
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)
@@ -138,7 +137,7 @@ func (ah *AuthenticationHandler) MiddlewareValidateRefreshToken(next http.Handle
 
 // MiddlerwareValidateVerificationData validates whether the request contains the email
 // and confirmation code that are required for the verification
-func (ah *AuthHandler) MiddlewareValidateVerificationData(next http.Handler) http.Handler {
+func (ah *AuthenticationHandler) MiddlewareValidateVerificationData(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		w.Header().Set("Content-Type", "application/json")
@@ -163,7 +162,7 @@ func (ah *AuthHandler) MiddlewareValidateVerificationData(next http.Handler) htt
 		}
 
 		// add the ValidationData to context
-		ctx := context.WithValue(r.Context(), handlers.VerificationDataKey{}, *verificationData)
+		ctx := context.WithValue(r.Context(), VerificationDataKey{}, *verificationData)
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)
